@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jangs Lebaran Susun Farm</title>
+    <style>
+      body {
+        background-image: url("https://media.discordapp.net/attachments/1068072767955685446/1147673792651464886/Jangs.jpg?width=327&height=327"); /* Ganti dengan URL gambar latar belakang Anda */
+        background-size: 30%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-color: black;
+        color: rgb(255, 255, 255);
+        background-position: center center;
+      }
+      button {
+        background-color: #ff00ee;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+      textarea {
+        color: rgb(255, 255, 255);
+        background-color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Jangs Lebaran Susun Farm</h1>
+
+    <label for="farmList">Masukkan daftar farm :</label><br />
+    <textarea id="farmList" rows="5" cols="40"></textarea><br /><br />
+
+    <label for="total">Masukkan jumlah total farm:</label>
+    <input type="number" id="total" min="1" value="2" /><br /><br />
+
+    <button onclick="groupFarms()">Config semua farm</button>
+
+    <h2>Hasil Semua Farm :</h2>
+    <pre id="result"></pre>
+
+    <script>
+      function groupFarms() {
+        var farmListText = document.getElementById("farmList").value;
+        if (farmListText.trim() !== "") {
+          var lastCharacter = farmListText.slice(-1);
+          if (lastCharacter !== ",") {
+            farmListText += ",";
+          }
+        }
+        var regex = /"([^"]+)"/g;
+        var farms = [];
+        var match;
+        while ((match = regex.exec(farmListText)) !== null) {
+          farms.push(match[1]);
+        }
+
+        var total = parseInt(document.getElementById("total").value);
+
+        var farmGroups = [];
+        for (var i = 0; i < farms.length; i += total) {
+          farmGroups.push(`"${farms.slice(i, i + total).join('","')}"`);
+        }
+
+        var result = farmGroups.join(",\n");
+        document.getElementById("result").textContent = result;
+
+        var blob = new Blob([result], { type: "text/plain" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "config_farm.txt";
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    </script>
+  </body>
+</html>
